@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<html>
+<meta charset="utf-8">
+<script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+<title></title>
+<style>
+
+</style>
+<body>
+<div class="container" ng-app="cartApp" ng-controller="CartCtrl">
+    <!--直接把bootstrap的官方文档上的代码复制过来，再改改，得到一个表格结构-->
+
+    <!--当数组为空时，显示以下信息，并隐藏table-->
+    <h1 ng-hide="cart.length>0">购物车里什么也没有</h1>
+    <table class="table" ng-show="cart.length>0">
+        <caption>购物列表动态显示</caption>
+        <thead>
+        <tr>
+            <th>产品编号</th>
+            <th>产品名字</th>
+            <th>购买数量</th>
+            <th>产品单价</th>
+            <th>产品总价</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="item in cart">
+            <td ng-bind="item.id"></td>
+            <td ng-bind="item.name"></td>
+            <td>
+                <button class="btn btn-info" ng-click='addNumber()'>+</button>
+                <input type="text" ng-model="item.count">
+                <button class="btn btn-info" ng-click='reduceNumber($index)'>-</button>
+            </td>
+            <td ng-bind="item.price | currency:'￥'"></td>
+            <td ng-bind="item.price*item.count | currency:'￥'"></td>
+            <td>
+                <button class="btn btn-danger" ng-click="deleteItem($index)">移除</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>总购买价格</td>
+            <td ng-bind="totalPrice() | currency:'￥'"></td>
+            <td>总购买数量</td>
+            <td ng-bind="totalAmount()"></td>
+            <td></td>
+            <td>
+                <button class="btn btn-warning" ng-click="deleteAll()">清空</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    var app = angular.module("cartApp", [])
+    app.controller("CartCtrl", ["$scope", function ($scope) {
+        $scope.cart =[
+            {
+                "id": "001",
+                name: "iphone6",
+                count: 3,
+                price: 5000
+            },
+            {
+                id: "002",
+                name: "iphone7",
+                count: 4,
+                price: 3000
+            },
+            {
+                id: "003",
+                name: "iphone8",
+                count: 2,
+                price: 4000
+            },
+        ]
+        $scope.totalAmount = function () {
+            var s=0
+            for(i=0; i<this.cart.length; i++){
+                s += this.cart[i].count*1
+            }
+            return s
+        }
+        $scope.totalPrice = function () {
+            var s=0
+            for(i=0; i<this.cart.length; i++){
+                s += this.cart[i].count*this.cart[i].price
+            }
+            return s
+        }
+
+// +按钮所绑定的函数
+        $scope.addNumber = function () {
+            this.item.count += 1
+        }
+
+//        -按钮所绑定的函数。需要从元素中将$index传入
+        $scope.reduceNumber = function (index) {
+            if(this.item.count>1){
+                this.item.count -= 1
+            }else{
+//                当数量小于1时，会删除信息。若用户确定删除，则deleteItem（）返回true。否则为false,让数量为1。
+                if(!this.deleteItem(index)){
+                    this.item.count = 1
+                }
+
+            }
+        }
+
+//        是否可以直接使用$index，而不把$index传入到形参index0k中？
+        $scope.deleteItem = function (index0) {
+            if(confirm("亲，你确定要删除"+this.cart[index0].name+"的信息么？")){
+                this.cart.splice(index0, 1)
+//                为什么用filter实现不了删除呢？this.cart中的元素已经删除了，但是在页面中的仍然显示。
+//                this.cart = this.cart.filter(function (item, index) {
+//                    return !(index == index0)
+//                })
+
+//                若点击确定，则执行return，整个函数结束，后面的语句不再执行。
+                return true
+            }
+                return false
+
+
+        }
+
+//        删除所有信息的函数
+        $scope.deleteAll = function ($index) {
+            if(confirm("亲，你确定要删除所有信息么？")){
+                if(this.cart.length!=0){
+                    this.cart = []
+                }
+            }
+        }
+    }])
+
+</script>
+
+</body>
+</html>
