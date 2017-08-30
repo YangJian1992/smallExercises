@@ -221,10 +221,13 @@
 //                colorSet(counter);
                 if(counter === ($("#photo img").length-1)){
                     counter = 1;
-                    moveTo(counter, 0);
-                    $("#photo").css("left",""+ PhotoWidth*(counter) +"px");
-                    colorSet(counter);
+//                    moveTo(counter, 0);
+//                    $("#photo").css("left",""+ PhotoWidth*(counter) +"px");
 //                    colorSet(counter);
+                    $("#photo").animate({"left": ""+ PhotoWidth*(counter) +"px"}, 0, colorSet(counter));
+
+                    $("#photo").css("left", ""+ PhotoWidth*(counter) +"px");
+                    colorSet(counter);
                 }
             }, t);
         };
