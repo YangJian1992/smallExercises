@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>轮播图</title>
+
+    <style type="text/css">
+        /*去掉默认的内外边距和下划线*/
+        *{
+            text-decoration: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        /*为显示框设置样式*/
+        #box0{
+            width: 730px;
+            height: 454px;
+            /*background-color: red;*/
+            margin: 70px auto;
+            border: 5px solid deepskyblue;
+            overflow: hidden;
+            position: relative;
+
+        }
+
+        /*给图片集设置样式*/
+        #photo{
+            width: 5840px;
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+            position: relative;
+            left: -730px;
+            z-index: 1;
+        }
+
+        #photo li{
+            float: left;
+        }
+
+        /*左箭头*/
+        #prev{
+            position: absolute;
+            left: 0px;
+            top: 202px;
+        }
+
+        /*右箭头*/
+        #next{
+            position: absolute;
+            right: 0px;
+            top: 202px;
+        }
+
+        /* 问题：箭头是内联元素，未设置成block，为什么可以设置宽度和高度? */
+        .arrow{
+            cursor: pointer;
+            /*display: block;*/
+            height: 50px;
+            width: 50px;
+            background-color: rgba(20, 80, 10, .3);
+            color: yellow;
+            text-align: center;
+            line-height: 45px;
+            font-size: 40px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        /*给每个小圆点设置样式*/
+        .circle div{
+            width: 8px;
+            height: 8px;
+            border-radius: 50% 50%;
+            float: left;
+            border: 2px solid black;
+            margin: 0 2px;
+            cursor: pointer;
+
+        }
+
+        /*给小圆点的父元素设置样式*/
+        .circle{
+            width: 96px;
+            hight: 8px;
+            position: absolute;
+            left: 317px;
+            top: 95%;
+            z-index: 2;
+        }
+
+        /*小圆点的背景颜色*/
+        .circleColor{
+            background-color: yellow;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="box0">
+    <ul id="photo"><!--一共六张图片，编号是从001到006-->
+        <li><img src="img/jd006.jpg" alt=""></li>
+        <li><img src="img/jd001.jpg" alt=""></li>
+        <li><img src="img/jd002.jpg" alt=""></li>
+        <li><img src="img/jd003.jpg" alt=""></li>
+        <li><img src="img/jd004.jpg" alt=""></li>
+        <li><img src="img/jd005.jpg" alt=""></li>
+        <li><img src="img/jd006.jpg" alt=""></li>
+        <li><img src="img/jd001.jpg" alt=""></li>
+    </ul>
+    <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+    <a href="javascript:;" id="next" class="arrow">&gt;</a>
+    <div class="circle">
+        <div index ="1" class="circleColor"></div>
+        <div index ="2"></div>
+        <div index ="3"></div>
+        <div index ="4"></div>
+        <div index ="5"></div>
+        <div index ="6"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    /*
+     功能说明:
+     1. 点击向右(左)的图标, 平滑切换到下(上)一页
+     2. 无限循环切换: 第一页的上一页为最后页, 最后一页的下一页是第一页
+     3. 每隔3s自动滑动到下一页
+     4. 当鼠标进入图片区域时, 自动切换停止, 当鼠标离开后,又开始自动切换
+     5. 切换页面时, 下面的圆点也同步更新
+     6. 点击圆点图标切换到对应的页
+
+
+
+
+     做完后，存在的问题 ：
+     $("#photo").css("left",""+ PhotoWidth*(counter) +"px");//这句没用，无法使图片跳转。
+     $("#photo").animate({"left": ""+ PhotoWidth*(counter) +"px"}, 0, colorSet(counter));
+     //虽然能跳转，但会有闪动的效果。
+     .arrow：箭头是内联元素，未设置成block，为什么可以设置宽度和高度? */
+
+    $(function () {
+        var PhotoWidth = -730;//表示一张图片的宽度，常量。
+        var counter = 1;//表示当前图片的编号，起始为1，显示第一张图片。
+        var timer;//储存定时器的返回值。
+        var T = 2000;//定时器的时间间隔，常量。
+
+        //定义函数colorSet，设置小圆点的背景颜色，counter表示每个圆点的编号，与图片编号一致。
+        function colorSet(counter){
+            $(".circle>div").removeClass("circleColor");
+            $('.circle>div[index=' + counter + ']').addClass('circleColor');
+        }//filter方法的括号内是选择器，也可以不用。
+
+        //定义动画函数moveTo，参数counter表示图片编号，t表示动画时间。
+        function moveTo(counter, t){
+            $("#photo").stop().animate({"left": ""+ PhotoWidth*(counter) +"px"}, t, colorSet(counter));
+            //添加stop()，图片每次滑动前，清除序列中的动画，当用户快速点击箭头时，图片可以快速移动，
+            // 也保证圆点和图片一致。
+        }
+
+        //为向后按钮添加单击事件。
+        $("#next").click(function () {
+            counter++;
+            moveTo(counter, 500);//counter为7时,无法设置小圆点的颜色，但可以通过if后面的语句设置。
+//            colorSet(counter);
+            if(counter === ($("#photo img").length-1)){
+                counter = 1;//由最后一张图片滑到第一张时，使counter为1。
+                $("#photo").animate({"left": ""+ PhotoWidth*(counter) +"px"}, 0, colorSet(counter));
+
+                $("#photo").css("left", ""+ PhotoWidth*(counter) +"px");
+//                alert("left:"+$("#photo").css("left"));
+                colorSet(counter);
+            }
+        })
+
+        //为向前按钮添加单击事件。
+        $("#prev").click(function () {
+            counter--;
+            moveTo(counter, 500);
+//            colorSet(counter);
+            if(counter === 0){
+                counter =($("#photo img").length-2);//由第一张图片滑到最后一张时，使counter等于最大编号。
+                $("#photo").css("left",""+ PhotoWidth*(counter) +"px");//这句没用，无法跳到最后一页。
+                $("#photo").animate({"left": ""+ PhotoWidth*(counter) +"px"}, 0, colorSet(counter));
+                //虽然能跳转，但会有闪动的效果。
+                colorSet(counter);
+//                colorSet(counter);
+            }
+
+        })
+
+        //为小圆点添加单击事件
+        $(".circle>div").click(function () {
+            counter = $(this).attr("index");//使图片编号counter与小圆点索引值相等。
+            moveTo(counter, 500)
+//            colorSet(counter);
+        })
+
+        //为图片添加hover事件，移入时清除定时器，移出时开始定时器。
+        $("#box0").hover(function () {
+            window.clearInterval(timer);
+            $("#prev,#next").show();
+        }, function () {
+            interval(T);
+            $("#prev,#next").hide();
+        })
+
+        //设置定时器函数interval,参数t为时间间隔。
+        function interval(t){
+            timer = window.setInterval(function () {
+                counter++;
+                moveTo(counter, 500);
+//                colorSet(counter);
+                if(counter === ($("#photo img").length-1)){
+                    counter = 1;
+                    moveTo(counter, 0);
+                    $("#photo").css("left",""+ PhotoWidth*(counter) +"px");
+                    colorSet(counter);
+//                    colorSet(counter);
+                }
+            }, t);
+        };
+
+        //开始定时器函数。
+        interval(T);
+    })
+</script>
+</body>
+</html>
