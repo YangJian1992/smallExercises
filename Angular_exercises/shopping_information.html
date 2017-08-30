@@ -112,7 +112,10 @@
             this.item.count += 1
         }
 
-//        -按钮所绑定的函数。需要从元素中将$index传入
+//        -按钮所绑定的函数。需要从元素中将$index传入。
+//        注意函数中this是指谁？
+//        如果函数所绑定的元素是在ng-repeat元素的内部，则this是指类似于ngRepeat的对象，这个对象中含有item。
+//        否则，是指$scope。另外，使用chrome中angular插件能看到$rootscope，$scope以及ngRepeat、item的关系
         $scope.reduceNumber = function (index) {
             if(this.item.count>1){
                 this.item.count -= 1
@@ -130,14 +133,17 @@
             if(confirm("亲，你确定要删除"+this.item.name+"的信息么？")){
 //                $scope.cart.splice(index0, 1)
 //                为什么用filter实现不了删除呢？this.cart中的元素已经删除了，但是在页面中的仍然显示。
-//                现在这个问题已经解决了。$scope中有cart，也有ngRepeat,它们是并列的关系，都是$scope的对象。
-//                这里的this是指ngRepeat，而不是$scope，也不是item，item只是ngReapt中的元素。
+//                现在这个问题已经解决了。$scope中有cart。
+//                这里的this是指什么？反正不是$scope，也不是item，item只是ngReapt中的。
 //                所以this.cart不是指$scope中的cart。把this换成$scope即可。
 //                错误的示例
 //                this.cart = this.cart.filter(function (item, index) {
 //
 //                    return !(index == index0)
 //                })
+
+//                以下语句为false，说明this不是指$scope
+                console.log(this==$scope)
                 $scope.cart = $scope.cart.filter(function (item, index) {
                     return !(index == index0)
                 })
