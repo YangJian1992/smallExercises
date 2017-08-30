@@ -127,12 +127,20 @@
 
 //        是否可以直接使用$index，而不把$index传入到形参index0k中？
         $scope.deleteItem = function (index0) {
-            if(confirm("亲，你确定要删除"+this.cart[index0].name+"的信息么？")){
-                this.cart.splice(index0, 1)
+            if(confirm("亲，你确定要删除"+this.item.name+"的信息么？")){
+//                $scope.cart.splice(index0, 1)
 //                为什么用filter实现不了删除呢？this.cart中的元素已经删除了，但是在页面中的仍然显示。
+//                现在这个问题已经解决了。$scope中有cart，也有ngRepeat,它们是并列的关系，都是$scope的对象。
+//                这里的this是指ngRepeat，而不是$scope，也不是item，item只是ngReapt中的元素。
+//                所以this.cart不是指$scope中的cart。把this换成$scope即可。
+//                错误的示例
 //                this.cart = this.cart.filter(function (item, index) {
+//
 //                    return !(index == index0)
-//                })
+//                })                
+                $scope.cart = $scope.cart.filter(function (item, index) {
+                    return !(index == index0)
+                })
 
 //                若点击确定，则执行return，整个函数结束，后面的语句不再执行。
                 return true
