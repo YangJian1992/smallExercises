@@ -26,7 +26,7 @@
     <!--当数组为空时，显示以下信息，并隐藏table-->
     <h1 ng-hide="cart.length>0">购物车里什么也没有</h1>
     <table class="table" ng-show="cart.length>0">
-        <caption>购物列表动态显示</caption>
+        <caption>shopping_information</caption>
         <thead>
         <tr>
             <th>产品编号</th>
@@ -137,7 +137,7 @@
 //                this.cart = this.cart.filter(function (item, index) {
 //
 //                    return !(index == index0)
-//                })                
+//                })
                 $scope.cart = $scope.cart.filter(function (item, index) {
                     return !(index == index0)
                 })
@@ -158,6 +158,37 @@
                 }
             }
         }
+//        $watch监听的是$scope的属性和方法，不能直接监听属性中的其他变量。
+//监听cart属性，使用户不能输入非法字符。一定要有新变量和旧变量的概念，要看数据是新变量中的还是旧变量中的。
+//  由于用户在某一时刻只能改变一个输入框，所以只有一个对象中的count会变化，一旦找到，循环可以结束。
+        $scope.$watch("cart", function (newValue, oldValue) {
+            if(oldValue !== newValue){
+                for(var i=0; i<newValue.length; i++){
+                    let newItem = newValue[i]
+                    let oldItem = oldValue[i]
+                    let count = newItem.count
+
+//                    如果用户没有输入，则
+                    if(count===""){
+                        return
+                    }
+//                    为什么下面的语句中的newItem.count不能用count代替？
+//                    因为newItem.count是对象newItem中的count属性，而count变量的值等于这个属性值。改变count变量，
+//                    但newItem中的count属性不会变化。
+                    if(isNaN(count*1)){
+                        newItem.count = oldItem.count
+                        return
+                    }else{
+//                        当用户输入数字时，结束for循环,提高效率，也可以用return。
+                        break
+                    }
+
+
+
+                }
+
+            }
+        }, true)
     }])
 
 </script>
