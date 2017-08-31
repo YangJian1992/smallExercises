@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"
+      xmlns="http://www.w3.org/1999/html">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+<script src="angular-messages.js"></script>
+<!--记住除了angular.js之外，还要引入messages.js文件-->
+
+<html>
+<meta charset="utf-8">
+<title>angular-messages_Form</title>
+<style>
+
+</style>
+<body ng-app="myApp" ng-controller="MyCtrl">
+<br>
+<div class="container">
+    <!--表单和表单项都要有name属性。这里name属性userForm直接作为$scope的属性。userForm是一个对象，含有四个对象，分别是表单
+    中其他表单项的name属性，如pwd，gender等。-->
+    <form class="form-horizontal" name="userForm">
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">用户名</label>
+            <div class="col-sm-10">
+                <!--
+                placeholder是输入框提示信息
+                names不可少。其他验证条件，可以看官方文档。
+                注意ng-model的值为user.name，定义user为$scope的属性，该对象用来储存不同表单项的输入值，如user.password等。
+                 对象中。可以用带点的方式给gn-model命名。
+                -->
+                <input type="text"
+                       class="form-control"
+                       placeholder="用户名"
+                       name="userName"
+                       ng-model="user.name"
+                       ng-minlength="6"
+                       ng-maxlength="8"
+                       ng-required="true">
+                <!--
+                ng-messages复数
+                如果不设置ng-show,会一直显示div。且要注意ng-show的条件，$dirty属性为true表示操作过；$invalid属性为true
+                ，表示验证无效。
+                ng-class中的字符串用单引号括起来。不用class可以防止加载时提示框会闪动。
+                -->
+                <div ng-messages="userForm.userName.$error" ng-class="'alert alert-danger'"
+                     ng-show="userForm.userName.$dirty&&userForm.userName.$invalid">
+                    <!--使用ng-bind，而不是直接定居标签中
+                    以防加载时，提示的文字会出现闪动。注意提示文字要用单引号括起来，表示字符串-->
+                    <span ng-message="minlength" ng-bind=" '最小长度不少于6' "></span>
+                    <span ng-message="maxlength" ng-bind=" '最大长度不超过8'"></span>
+                    <span ng-message="required" ng-bind=" '用户名是必须的'"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">密码</label>
+            <div class="col-sm-10">
+                <!--
+                placeholder是输入框提示信息
+                names不可少。其他验证条件，可以看官方文档。
+                -->
+                <input type="password"
+                       class="form-control"
+                       placeholder="密码"
+                       name="pwd"
+                       ng-model="user.password"
+                       ng-pattern="/^[a-zA-Z]{6,8}$/"
+                       ng-required="true">
+                <!--
+                ng-messages复数
+                如果不设置ng-show,会一直显示div。且要注意ng-show的条件，$dirty属性为true表示操作过；$invalid属性为true
+                ，表示验证无效。
+                ng-class中的字符串用单引号括起来。不用class可以防止加载时提示框会闪动。
+                -->
+                <div ng-messages="userForm.pwd.$error" ng-class="'alert alert-danger'"
+                     ng-show="userForm.pwd.$dirty&&userForm.pwd.$invalid">
+                    <!--使用ng-bind，而不是直接定居标签中
+                    以防加载时，提示的文字会出现闪动。注意提示文字要用单引号括起来，表示字符串-->
+                    <span ng-message="pattern" ng-bind=" '密码是6-8位字母'"></span>
+                    <span ng-message="required" ng-bind=" '密码是必须的'"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">性别</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="gender"  value="male" ng-model="user.Gender"
+                    ng-required="true"> 男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="gender"  value="female" ng-model="user.Gender"
+                    ng-required="true"> 女
+                </label>
+                <label class="radio-inline">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label">职业</label>
+            <div class="col-sm-10">
+                <select class="form-control"  name="worker" ng-required="true" ng-model="user.worker">
+                    <!-- value 属性中的值是表单被提交时被发送到服务器的值。
+                        注释：如果没有指定 value 属性，选项的值将设置为 <option> 标签中的内容。-->
+                    <option value="">未选择</option>
+                    <!--注意ng-bind可以复制标签，充分利用这一特点。如果内部含有回调函数，则this是指类似于ngRepeat的对象，
+                    不是$scope-->
+                    <option ng-repeat="worker in workers" value="{{worker}}" ng-bind="worker"></option>
+                </select>
+                <div ng-messages="userForm.worker.$error" ng-class="'alert alert-danger'"
+                     ng-show="userForm.worker.$dirty&&userForm.worker.$invalid">
+                    <!--使用ng-bind，而不是直接定居标签中
+                    以防加载时，提示的文字会出现闪动。注意提示文字要用单引号括起来，表示字符串-->
+                    <span ng-message="required" ng-bind=" '职业是必须的'"></span>
+                </div>
+                <label class="radio-inline">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <!--$invalid属性为true时表示未通过验证，此时无法点击按钮 -->
+                <button type="submit" class="btn btn-default" ng-disabled="userForm.$invalid">注册
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+
+<script>
+    var app = angular.module("myApp", ["ngMessages"])
+    app.controller("MyCtrl", function ($scope) {
+        $scope.workers = ["学生", "老师", "程序员"]
+    })
+
+</script>
+
+</body>
+</html>
