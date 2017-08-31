@@ -10,7 +10,10 @@ https://yangjian1992.github.io/smallExercises/Angular_exercises/table_add_delete
 2.购物信息动态显示（Angular_exercises/shopping_information.html） 
 https://yangjian1992.github.io/smallExercises/Angular_exercises/shopping_information.html
 
+3.使用angular-messages进行表单验证（Angular_exercises/angular-messages_Form.html）
+https://yangjian1992.github.io/smallExercises/Angular_exercises/angular-messages_Form.html
 
 jQuery的练习：
+
 1.轮播图：(smallExercises/jQueryExercises/LunBoTu/LunBoTu.html)
 https://yangjian1992.github.io/smallExercises/jQueryExercises/LunBoTu/LunBoTu.html
