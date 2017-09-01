@@ -13,6 +13,11 @@ https://yangjian1992.github.io/smallExercises/Angular_exercises/shopping_informa
 3.使用angular-messages进行表单验证（Angular_exercises/angular-messages_Form.html）
 https://yangjian1992.github.io/smallExercises/Angular_exercises/angular-messages_Form.html
 
+4.使用angular route跳转到其他页面（Angular_exercises/angularRoute/angularRoute1.html）
+https://yangjian1992.github.io/smallExercises/Angular_exercises/angularRoute/angularRoute1.html
+
+
+
 jQuery的练习：
 
 1.轮播图：(smallExercises/jQueryExercises/LunBoTu/LunBoTu.html)

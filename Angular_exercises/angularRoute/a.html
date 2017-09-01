@@ -1,0 +1,12 @@
+<div style="height: 500px; width:500px; background-color: #5bc0de;">
+    <h2>已经跳转到页面a</h2>
+    <p>{{aInfo}}</p>
+    <ul>
+        <li ng-repeat="id in ids">
+            <!--这里的id和js中的$routeParams.id是一致的，也就是路径中的id-->
+            请点击：
+            <a href="#/b/{{id}}">ID{{id}}</a>，跳转到相应的页面
+        </li>
+    </ul>
+
+</div>

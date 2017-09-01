@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+    <script src="../angular-route.js"></script>
+    <style>
+        .b1{
+            background-color: yellow;
+
+        }
+        .b2{
+            background-color: palevioletred;
+        }
+        .b3{
+            background-color: green;
+        }
+        .b4{
+            background-color: violet;
+        }
+    </style>
+<body ng-app="myApp" ng-controller="MyController">
+<ul>
+    <!--路径需要#-->
+    <li><a href="#/a">点击跳转到a页面</a></li>
+    <!--<li><a href="#/b">点击跳转到b页面</a></li>-->
+</ul>
+
+<!--使用ng-view这个方法通过使用路由控制，可以方便的实现页面组合。
+但这个方法也有一个重大缺点，就是一个html文件中，只能有一个ng-view。
+ng-view标签之间，就是所跳转的页面的位置。或者用：<div ng-view></div>-->
+<ng-view>
+</ng-view>
+
+<script>
+    angular.module("myApp", ["ngRoute"])
+//            $routeProvider对象，有when方法。
+    // AngularJS 模块的 config 函数用于配置路由规则。通过使用 configAPI，我们请求把$routeProvider注入到我们的配置函数
+    // 并且使用$routeProvider.whenAPI来定义我们的路由规则。
+//    $routeProvider 为我们提供了 when(path,object) & otherwise(object) 函数按顺序定义所有路由，函数包含两个参数:
+//            第一个参数是 URL 或者 URL 正则规则。
+//            第二个参数是路由配置对象。
+            .config(function ($routeProvider) {
+                $routeProvider
+//                        when方法，前面为跳转页面的路径，与ul标签中的“#/a”对应。后面为页面名称和对应的控制器。
+                        .when("/a", {
+                            templateUrl:"a.html",
+                            controller: "aCtrl"
+                        })
+//                        与a页面中路径一致，多加一个冒号。
+                        .when("/b/:id", {
+                            templateUrl:"b.html",
+                            controller: "bCtrl"
+                        })
+//                        otherwise表示没有路径匹配时，跳转的页面，可设置默认页面为b。
+                        .otherwise("/a")
+            })
+            .controller("aCtrl", function ($scope) {
+//                控制a页面中的内容。每个页面中对应一个控制器。
+                $scope.aInfo = "这是ng表达式中的语句"
+                $scope.ids = [1, 2, 3, 4]
+            })
+            .controller("bCtrl", function ($scope, $routeParams) {
+                $scope.bInfo = "这也是ng表达式中的语句"
+//                $scope.id对应于b页面中的id，并不是其他页面的id，也可以换别的名字。
+//                 而$routeParams.id对应路径/b/:id中的id，也就是a页面中的id。
+                $scope.id = $routeParams.id
+            })
+            .controller("MyController", function ($scope) {
+                
+            })
+</script>
+</body>
+</html>
