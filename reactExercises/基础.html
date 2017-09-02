@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HelloWorld</title>
+
+    <script type="text/javascript" src="react.js"></script>
+    <script type="text/javascript" src="react-dom.js"></script>
+    <script type="text/javascript" src="babel.min.js"></script>
+
+</head>
+<body>
+<div id="example" style='height: 500px; width: 500px'></div>
+<script type="text/babel">
+//  组件定义一共有两种方式。此处不需要this来引用props
+    function  Welcome(props) {
+        return (
+                <div>
+                    <h1>{props.name}</h1>
+                    <h1>{props.gender}</h1>
+                    <h1>{props.age}</h1>
+                </div>
+        )
+    }
+
+    const person = {
+        name: "yangjian",
+        age: 30,
+        gender: "male"
+    }
+//  为组件指定默认属性
+    Welcome.defaultProps = {
+        age: 18,
+        gender: "male",
+        }
+
+//  定义组件的第二种方式
+    class MyComp extends React.Component{
+//      MyComp是构造函数，组件对象是它的实例。
+//          状态初始化，大括号不能省，是对象形式
+        constructor(props){
+            super(props)
+            this.state = {
+                like: true
+            }
+//          只有内置方法中的this是指组件，自定义方法中的this是指null,需要用bind绑定，并且返回一个新的函数。
+            this.handleClick = this.handleClick.bind(this)
+            this.handleBlur= this.handleBlur.bind(this)
+        }
+
+//      组件内部定义函数直接用这种形式么？不用function声明么？ func(){}
+
+//      event表示事件发生的状态。event.target 返回触发事件的节点
+//          使用setState方法，大括号不能省，是对象的形式，属性或是like，不用this。
+//          true和false与点击事件配合使用，可以在两种状态之间切换。
+        handleClick(){
+            this.setState({
+                like: !this.state.like
+            })
+        }
+
+//          很奇怪，为什么是this.refs.msg，msg是ref的属性值，而ref才是属性名？记住就行了。
+        handleBlur(){
+            const input = this.refs.msg
+            input.placeholder = "已经失去焦点"
+            alert(input.placeholder)
+        }
+
+         render(){
+            const text = this.state.like?"I like you" : "I don't like you"
+            return(
+
+//                  ref="msg" 不是 refs
+//                  需要有一个根标签div,事件全部委托给这个div，不用绑定给多个。
+                    <div>
+                        <input type="text" value="请点击按钮改变按钮上的文字"/>
+                        <button onClick={this.handleClick} >{text}</button>
+                        <input type="text" ref="msg" onBlur={this.handleBlur} placeholder="失去焦点时提示"/>
+                    </div>
+            )
+        }
+    }
+
+    ReactDOM.render(
+        <MyComp/>,
+        document.getElementById("example")
+    )
+
+
+</script>
+
+</body>
+
+</html>
