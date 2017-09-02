@@ -22,3 +22,7 @@ jQuery的练习：
 
 1.轮播图：(smallExercises/jQueryExercises/LunBoTu/LunBoTu.html)
 https://yangjian1992.github.io/smallExercises/jQueryExercises/LunBoTu/LunBoTu.html
+
+Reactr的练习：
+1.待办事项：（smallExercises/reactExercises/待办事件的添加.html）
+https://yangjian1992.github.io/smallExercises/reactExercises/待办事件的添加.html
