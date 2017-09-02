@@ -37,7 +37,7 @@
 //  定义组件的第二种方式
     class MyComp extends React.Component{
 //      MyComp是构造函数，组件对象是它的实例。
-//          状态初始化，大括号不能省，是对象形式
+//      状态初始化，大括号不能省，是对象形式
         constructor(props){
             super(props)
             this.state = {
@@ -65,7 +65,7 @@
             input.placeholder = "已经失去焦点"
             alert(input.placeholder)
         }
-
+//       render()怎么理解？看作函数方法
          render(){
             const text = this.state.like?"I like you" : "I don't like you"
             return(

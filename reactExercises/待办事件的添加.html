@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script type="text/javascript" src="react.js"></script>
+        <script type="text/javascript" src="react-dom.js"></script>
+        <script type="text/javascript" src="babel.min.js"></script>
+    </head>
+    <body>
+        <div id="example"></div>
+        <script type="text/babel">
+//       1.先拆分组件 2.再写静态页面 3.最后添加行为。
+//       在主组件中定义状态
+//          将App01分组件中的输入值传到主组件App的状态中，再把主组件中的状态值传到分组件App02中去。
+//          分组件App01中调用主组件中的函数，并把输入值作为函数参数传入到主组件中。
+//          主组件给分组件添加属性，并用props传入到分组件中。
+
+
+
+//          组件返回值必须放在一个div中，不管是主组件还是分组件。
+//
+            class App extends React.Component{
+                constructor(props){
+                    super(props)
+                    this.state={
+                        todos: ['吃饭', '睡觉', '打豆豆']
+                    }
+                    this.add = this.add.bind(this)
+                }
+
+//              unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。
+                add(todo){
+                    const todos = this.state.todos
+                    todos.unshift(todo)
+//                  改变state，直接把更新后的属性值传入大括号中就行了。onChange事件的回调中设置state,就可以页面将
+//                  数据传入state。
+                    this.setState({
+                        todos
+                    })
+                }
+
+                render(){
+                    return(
+//                          add={this.add} 中的函数 add不能加（）
+                            <div>
+                                <App01 todos={this.state.todos} add={this.add}/>
+                                <App02 todos = {this.state.todos}/>
+                                <Time />
+                            </div>
+
+                    )
+                }
+            }
+
+            class App01 extends React.Component{
+                constructor(props){
+                    super(props)
+                    this.add = this.add.bind(this)
+                }
+
+                add(){
+//                  输入空格和空串，都转化成空串，空串对应false，函数结束。
+                    const addInput = this.refs.App01Input.value.trim()
+                    if(!addInput){
+                        return
+                    }
+                    this.props.add(addInput)
+                    this.refs.App01Input.value = ''
+
+
+                }
+
+                render(){
+                    return(
+                        <div>
+                            <h2>待办事件：</h2>
+                            <input type="text" ref="App01Input"/>
+                            <button onClick={this.add} >Add(共{this.props.todos.length}项)</button>
+                        </div>
+                    )
+                }
+            }
+
+            class App02 extends React.Component{
+                render(){
+                    return(
+                            <ul>
+                                {this.props.todos.map((item, index)=>{
+                                    return <li key={index}>{item}</li>
+                                })}
+                            </ul>
+                    )
+                }
+            }
+
+
+//          最小化页面重绘
+            class Time extends React.Component{
+                constructor(props){
+                    super(props)
+                    this.state={
+                        date: new Date()
+                    }
+                }
+
+//              箭头函数中的this是指函数外部的this。但是，setState的大括号内不是可以直接放属性值，怎么又要名值对了？
+//              渲染完成后调用一次，这时候DOM结构已经渲染，初始化
+                componentDidMount(){
+                    setInterval(()=>{
+                        this.setState({
+                            date: new Date()
+                        })
+                    },1000)
+                }
+
+                render(){
+                           return(
+                                   <p>现在的时间是:{this.state.date.toTimeString()}
+                                   </p>
+                           )
+                       }
+
+            }
+
+
+//          渲染别忘了
+            ReactDOM.render(<App />, document.getElementById("example"))
+            
+        </script>
+    </body>
+</html>
