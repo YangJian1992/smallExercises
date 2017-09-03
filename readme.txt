@@ -33,4 +33,4 @@ https://yangjian1992.github.io/smallExercises/reactExercises/待办事件的添�
 
 CSS练习
 1.圣杯和双飞翼模型
-https://yangjian1992.github.io/smallExercises/CSS/圣杯和双飞翼.html
+https://yangjian1992.github.io/smallExercises/CSS/圣杯和双飞翼1.html
