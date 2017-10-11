@@ -1,6 +1,6 @@
 2017-07-23
 会将平时的小练习和html文件的预览地址放在这里。
-
+Redshift-YangJian面试题：https://yangjian1992.github.io/smallExercises/Redshift-YangJian/index.html
 
 Angular的练习：
 
