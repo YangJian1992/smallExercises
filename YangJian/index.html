@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="demo.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <!--<script src="./demo.js"></script>-->
+    <title>YangJianDemo</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!--"草稿"图形开始-->
+        <div class="box" >
+            <div class="rectangle color-draft" id="arrow1">
+                草稿
+            </div>
+            <!--箭头由大小两个三角形重叠而成-->
+            <div class="triangle-big position-big-right"></div>
+            <div class="triangle-small position-small-right color-draft-border"></div>
+        </div>
+        <!--"草稿"图形结束-->
+
+        <!--"待审核"图形开始-->
+        <div class="box">
+            <div class="triangle-big position-big-left color-audit-border"></div>
+            <div class="triangle-small position-small-left"></div>
+            <div class="rectangle color-audit"  id="arrow2">
+                待审核
+            </div>
+            <div class="triangle-big position-big-right color-audit-border"></div>
+            <div class="triangle-small position-small-right color-audit-border"></div>
+        </div>
+        <!--"待审核"图形结束-->
+
+        <!--"待复核"图形开始-->
+        <div class="box">
+            <div class="triangle-big position-big-left"></div>
+            <div class="triangle-small position-small-left"></div>
+            <div class="rectangle" id="arrow3">
+                待复核
+            </div>
+            <div class="triangle-big position-big-right"></div>
+            <div class="triangle-small position-small-right"></div>
+        </div>
+        <!--"待复核"图形结束-->
+
+        <!--"已核准"图形开始-->
+        <div class="box">
+            <div class="triangle-big position-big-left"></div>
+            <div class="triangle-small position-small-left"></div>
+            <div class="rectangle border-approved" id="arrow4">
+                已核准
+            </div>
+        </div>
+        <!--"已核准"图形结束-->
+
+        <!--"已中止"图形开始-->
+        <div class="terminated" id="arrow5">
+            已中止
+        </div>
+        <!--"已中止"图形结束-->
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+//        定义输入变量dataInput。
+        var dataInput = [
+            {"name":"待接单","status":"WAIT_ACCEPT","isShadowed":true},
+            {"name":"待发货","status":"WAIT_DELIVER","isShadowed":true,"isCurrentStatus":true},
+            {"name":"验货入库","status":"STOCK_IN"},
+            {"name":"已完成","status":"DELIVERED"}
+        ];
+//        定义供应链函数supplyChain，实现改变样式的功能。
+        function supplyChain(dataInput) {
+            if(dataInput.length==1){
+//                如果只有一个对象，将该对象的名字放在arrow5样式的箭头中
+                $("#arrow5").text(dataInput[0].name);
+            }else{
+                $("#arrow1").text(dataInput[0].name);
+                $("#arrow2").text(dataInput[1].name);
+                $("#arrow3").text(dataInput[2].name);
+                $("#arrow4").text(dataInput[3].name);
+//                如果第一个箭头不为true，则去掉灰色样式。
+                if(!dataInput[0].isShadowed){
+                    $("#arrow1").removeClass("color-draft");
+                    $(".box:contains('待接单') :last").removeClass("color-draft-border");
+                }
+//                如果第二箭头两属性至少有一个不为true，则去年蓝色样式。
+                if(!(dataInput[1].isShadowed&&dataInput[1].isCurrentStatus)){
+                    $("#arrow2").removeClass("color-audit");
+                    $(".box:contains('待发货') [class*='color-audit-border']").removeClass('color-audit-border');
+                }
+            }
+        }
+//        执行函数
+         supplyChain(dataInput);
+    })
+</script>
+</html>
